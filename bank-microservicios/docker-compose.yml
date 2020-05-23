@@ -1,0 +1,80 @@
+version: '3.7'
+services:
+  config-serverv1:
+    image: observadorxpl/config-server:v1
+    ports:
+      - "8888:8888"
+    restart: always
+    networks:
+      - bootcamp
+  gateway-serverv1:
+    image: observadorxpl/gateway-server:v1
+    ports:
+      - "8099:8099"
+    restart: always
+    networks:
+      - bootcamp
+    depends_on: 
+      - config-serverv1
+      - eureka-serverv1   
+  eureka-serverv1:
+    image: observadorxpl/eureka-server:v1
+    ports:
+      - "8761:8761"
+    restart: always
+    networks:
+      - bootcamp
+  mongodb-spring:
+    image: mongo
+    ports:
+      - "27017:27017"
+    restart: always
+    networks:
+      - bootcamp
+  micro-clientesv1:
+    image: observadorxpl/micro-clientes:v1
+    restart: always
+    networks:
+      - bootcamp
+    depends_on: 
+      - config-serverv1
+      - eureka-serverv1
+      - mongodb-spring
+  micro-bancariov1:
+    image: observadorxpl/micro-bancario:v1
+    restart: always
+    networks:
+      - bootcamp
+    depends_on: 
+       - config-serverv1
+       - eureka-serverv1
+       - mongodb-spring
+  micro-creditov1:
+    image: observadorxpl/micro-credito:v1
+    restart: always
+    networks:
+      - bootcamp
+    depends_on: 
+       - config-serverv1
+       - eureka-serverv1
+       - mongodb-spring
+  micro-operacionesbancariov1:
+    image: observadorxpl/micro-operacionesbancario:v1
+    restart: always
+    networks:
+      - bootcamp
+    depends_on: 
+      - config-serverv1
+      - eureka-serverv1
+      - mongodb-spring
+  micro-operacionescreditov1:
+    image: observadorxpl/micro-operacionescredito:v1
+    restart: always
+    networks:
+      - bootcamp
+    depends_on: 
+      - config-serverv1
+      - eureka-serverv1
+      - mongodb-spring
+networks:
+  bootcamp:
